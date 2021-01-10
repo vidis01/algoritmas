@@ -12,7 +12,7 @@ int main() {
 
     srand(time(NULL));
 
-    for (size_t n = 2; n < 20; n++)
+    for (size_t n = 2; n < 10; n++)
     {
         cout << "Laipsnis n = " << n << endl;
         n_geras = find_geras_matricos_laipsnis(n); //Strassen metodui
@@ -20,6 +20,7 @@ int main() {
         //Standartinis budas
         matA = matricosSukurimas(n);
         matricos_sugeneravimas(matA, n);
+        
 
         matB = matricosSukurimas(n);
         matricos_sugeneravimas(matB, n);
@@ -36,15 +37,21 @@ int main() {
             matA2 = matricosSukurimas(n_geras);
             nunulinimas(matA2, n_geras);
             matricos_kopijamivas(matA, matA2, n);
+            cout << "A=" << endl;
+            matricosSpausdinimas(matA2, n_geras);
 
             matB2 = matricosSukurimas(n_geras);
             nunulinimas(matB2, n_geras);
             matricos_kopijamivas(matB, matB2, n);
+            cout << "B=" << endl;
+            matricosSpausdinimas(matB2, n_geras);
 
             auto start = std::chrono::high_resolution_clock::now();
             matC = Strassen_Algoritmas(matA2, matB2, n_geras);
             auto end = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> diff = end - start;
+            cout << "c=" << endl;
+            matricosSpausdinimas(matB2, n_geras);
             cout << "Stassen time: " << diff.count() << endl;
         }
         else {
@@ -52,6 +59,8 @@ int main() {
             matC = Strassen_Algoritmas(matA, matB, n);
             auto end = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> diff = end - start;
+            cout << "c=" << endl;
+            matricosSpausdinimas(matC, n_geras);
             cout << "Stassen time: " << diff.count() << endl;
         }
         cout << "-------------" << endl;
