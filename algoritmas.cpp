@@ -3,69 +3,60 @@
 
 #include "Veiksmai_Su_Matricomis.h"
 #include "Strassen_Algoritmas.h"
+#include <vector>
+
 
 int main() {
     int n, n_geras;
-    int** matA, ** matB, ** matC;
-    int chose;
+    int** matA, ** matB, ** matA2, ** matB2, ** matC;
 
-    while (true) {
-        cout << "Pasirinkite kokiu budu norite sudauginti matricas: " << endl;
-        cout << "Standartiniu metodu iveskite 1, Strassen metodu iveskite 2" << endl;
-        cin >> chose;
+    srand(time(NULL));
 
-        switch (chose)
+    for (size_t n = 2; n < 20; n++)
+    {
+        cout << "Laipsnis n = " << n << endl;
+        n_geras = find_geras_matricos_laipsnis(n); //Strassen metodui
+
+        //Standartinis budas
+        matA = matricosSukurimas(n);
+        matricos_sugeneravimas(matA, n);
+
+        matB = matricosSukurimas(n);
+        matricos_sugeneravimas(matB, n);
+
+        auto start = std::chrono::high_resolution_clock::now();
+        matC = matricosSudauginimas(matA, matB, n);
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> diff = end - start;
+        cout << "Standard time: " << diff.count() << endl;
+
+        //Strassen metodu
+        if (n != n_geras)
         {
-        case 1:
-            cout << "Iveskite kokios eiles yra kvadratines matricos: " << endl;
-            cin >> n;
+            matA2 = matricosSukurimas(n_geras);
+            nunulinimas(matA2, n_geras);
+            matricos_kopijamivas(matA, matA2, n);
 
-            matA = matricosSukurimas(n);
-            matB = matricosSukurimas(n);
+            matB2 = matricosSukurimas(n_geras);
+            nunulinimas(matB2, n_geras);
+            matricos_kopijamivas(matB, matB2, n);
 
-            ivedimas(matA, n);
-            cout << "Matrica A: " << endl;
-            matricosSpausdinimas(matA, n);
-
-            ivedimas(matB, n);
-            cout << "Matrica B: " << endl;
-            matricosSpausdinimas(matB, n);
-
-            matC = matricosSudauginimas(matA, matB, n);
-            cout << "Sudauginimo rezultatas: " << endl;
-            matricosSpausdinimas(matC, n);
-
-            break;
-        case 2:
-            cout << "Iveskite kokios eiles yra kvadratines matricos: " << endl;
-            cin >> n;
-
-            n_geras = find_geras_matricos_laipsnis(n);
-
-            matA = matricosSukurimas(n_geras);
-            nunulinimas(matA, n_geras);
-            matB = matricosSukurimas(n_geras);
-            nunulinimas(matB, n_geras);
-
-            ivedimas(matA, n);
-            cout << "A matrica:" << endl;
-            matricosSpausdinimas(matA, n_geras);
-
-            ivedimas(matB, n);
-            cout << "B matrica:" << endl;
-            matricosSpausdinimas(matB, n_geras);
-
-            matC = matricosSukurimas(n_geras);
-            nunulinimas(matC, n_geras);
-            matC = Strassen_Algoritmas(matA, matB, n_geras);
-            cout << "Sudauginimo rezultatas:" << endl;
-            matricosSpausdinimas(matC, n_geras);
-
-            break;
-        default:
-            break;
+            auto start = std::chrono::high_resolution_clock::now();
+            matC = Strassen_Algoritmas(matA2, matB2, n_geras);
+            auto end = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> diff = end - start;
+            cout << "Stassen time: " << diff.count() << endl;
         }
+        else {
+            auto start = std::chrono::high_resolution_clock::now();
+            matC = Strassen_Algoritmas(matA, matB, n);
+            auto end = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> diff = end - start;
+            cout << "Stassen time: " << diff.count() << endl;
+        }
+        cout << "-------------" << endl;
     }
+    
     return 0;
 }
 
